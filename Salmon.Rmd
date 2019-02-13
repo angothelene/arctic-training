@@ -91,6 +91,60 @@ catch_wide = catch_long %>%
 head(catch_wide)
 ```
 
+### Clean up our data
+
+* rename catch to catch_thousands
+* change catch column to be numeric
+* create a new catch column in units num of fish
+
+```{r}
+catch_clean = catch_long %>% 
+  rename(catch_thousands = catch) %>% # new name = old name
+  mutate(catch_thousands = ifelse(catch_thousands == "I", 1, catch_thousands)) %>% 
+  mutate(catch_thousands = as.numeric(catch_thousands)) %>% 
+  mutate(catch = catch_thousands * 1000) %>% #to create a new column
+  select(-catch_thousands)
+
+head(catch_clean)
+```
+
+Look for where as.numeric failed
+
+```{r}
+test = as.numeric(catch_long$catch)
+i = which(is.na(test) == TRUE)
+i
+catch_long[i,]
+```
+
+The error is an "I" instead of a 1.
+If more errors, we could do:
+
+```{r}
+# mutate(catch_thousands = ifelse(catch_thousands %in% c("I","M","Z"), 1, catch_thousands))
+```
+
+## Split - Apply - Combine
+
+* calculate mean catch by species
+
+```{r}
+species_mean = catch_clean %>% 
+  group_by(species, Region) %>% 
+  summarize(catch_mean = mean(catch))
+
+head(species_mean)
+```
+
+```{r}
+year_mean = catch_clean %>% 
+  group_by(Year) %>% 
+  summarize(catch_mean = mean(catch)) %>% 
+  arrange(-catch_mean) #"-" for descendind order
+
+head(year_mean)
+```
+
 ## Join the Region Definitions
 
 ## Misc. Functions
