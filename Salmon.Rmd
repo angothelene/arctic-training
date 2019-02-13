@@ -33,6 +33,7 @@ These data are digitized from the Alaska Department of Fish and Game report: ALA
 library(DT)
 library(dplyr)
 library(tidyr)
+library(stringr)
 ```
 
 ## Open data
@@ -200,4 +201,11 @@ dates_unite = dates_split %>%
   unite(col = date_iso, year ,month ,day ,sep = "-")
 
 head(dates_unite)
+```
+
+**For the following, use package "stringr"**
+
+```{r}
+month = c("5","05","5")
+str_pad(month, 2, side="left", pad="0")
 ```
