@@ -1,5 +1,5 @@
 ---
-title: "Salmon"
+title: "Salmon - Reformat data"
 author: "Hélène Angot"
 date: "2/13/2019"
 output: html_document
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Data dowloaded [here](https://knb.ecoinformatics.org/view/df35b.304.2)
+Mike Byerly. Alaska commercial salmon catches by management region (1886- 1997). Gulf of Alaska Data Portal. Data dowloaded [here](https://knb.ecoinformatics.org/view/df35b.304.2)
 
 ## Abstract
 
@@ -26,12 +26,12 @@ library(tidyr)
 ## Open data
 
 ```{r}
-salmon_by_region = read.csv("/Users/angot/Documents/Formations_Tutoriels/Arctic_Data_Center/data/byerlySalmonByRegion.csv",header=TRUE)
+catch_original = read.csv("/Users/angot/Documents/Formations_Tutoriels/Arctic_Data_Center/data/byerlySalmonByRegion.csv",header=TRUE)
 region  = read.csv("/Users/angot/Documents/Formations_Tutoriels/Arctic_Data_Center/data/byerlyRegionDefs.csv",header=TRUE)
 ```
 
 ```{r}
-datatable(salmon_by_region)
+datatable(catch_original)
 ```
 
 ```{r}
@@ -45,6 +45,51 @@ datatable(region)
     * move from wide to long
 * general QA
 
+Remove the "all" and "notesRegCode" columns using "select".
+
+Cmd + shift + m: pipe operator shortcut %>% 
+
+```{r}
+catch_long = catch_original %>% 
+  select(Region,Year,Sockeye,Coho,Pink,Chum,Chinook)
+
+head(catch_long)
+```
+
+Another way of doing this:
+
+```{r}
+catch_long = catch_original %>% 
+  select(-All, -notesRegCode)
+```
+
+We're now going to use function "gather"
+
+```{r message=FALSE, warning=FALSE}
+catch_long = catch_original %>% 
+  select(-All, -notesRegCode) %>% #select columns we want
+  gather(key = "species", value = "catch", -Region, -Year) #move from wide to long
+
+head(catch_long)
+```
+
+If we want to move back to wide format
+
+```{r message=FALSE, warning=FALSE}
+catch_wide = catch_long %>% 
+  spread(key = species, value = catch)
+
+head(catch_wide)
+```
+
+or
+
+```{r message=FALSE, warning=FALSE}
+catch_wide = catch_long %>% 
+  spread(key = Region, value = catch)
+
+head(catch_wide)
+```
 
 ## Join the Region Definitions
 
