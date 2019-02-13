@@ -1,0 +1,54 @@
+---
+title: "Salmon"
+author: "Hélène Angot"
+date: "2/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Data dowloaded [here](https://knb.ecoinformatics.org/view/df35b.304.2)
+
+## Abstract
+
+These data are digitized from the Alaska Department of Fish and Game report: ALASKA COMMERCIAL SALMON CATCHES, 1878-1997. Salmon catch statistics are generated from a system of landing records called the Fish Ticket System. All salmon that are sold must be reported on a fish ticket, which will eventually end up in a large computer database going back to 1969. Data in this report from 1969 to the 1997 carne from this system. Statistics from years prior to 1969 came from previous versions of this report.
+
+## Packages
+
+```{r message=FALSE}
+library(DT)
+library(dplyr)
+library(tidyr)
+```
+
+## Open data
+
+```{r}
+salmon_by_region = read.csv("/Users/angot/Documents/Formations_Tutoriels/Arctic_Data_Center/data/byerlySalmonByRegion.csv",header=TRUE)
+region  = read.csv("/Users/angot/Documents/Formations_Tutoriels/Arctic_Data_Center/data/byerlyRegionDefs.csv",header=TRUE)
+```
+
+```{r}
+datatable(salmon_by_region)
+```
+
+```{r}
+datatable(region)
+```
+
+## Reformat Catch Data
+
+* remove the "all" column
+* create species column
+    * move from wide to long
+* general QA
+
+
+## Join the Region Definitions
+
+## Misc. Functions
+
+
+
