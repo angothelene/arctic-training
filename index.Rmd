@@ -1,6 +1,8 @@
 ---
 title: "Data visualization"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -16,6 +18,7 @@ library(leaflet)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(scales)
 library(DT)
 ```
 
@@ -69,7 +72,9 @@ ggplot(annual_esc, mapping = aes(x = Species, y = count, fill = SASAP.Region)) +
 
 ```{r}
 my_theme = theme_test() +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", 
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r}
@@ -80,6 +85,42 @@ ggplot(filter(annual_esc, SASAP.Region == "Kodiak"), aes(x = year, y = count, co
   xlab("Year") +
   ggtitle("Kodiak Salmon Escapement") +
   my_theme
+```
+
+What if we don't want scientific notation on the y-axis?
+
+```{r}
+ggplot(filter(annual_esc, SASAP.Region == "Kodiak"), aes(x = year, y = count, color = Species)) +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous(labels = comma) +
+  ylab("Escapement (num of fish)") +
+  xlab("Year") +
+  ggtitle("Kodiak Salmon Escapement") +
+  my_theme
+```
+
+```{r, fig.width = 7, fig.height = 8}
+ggplot(annual_esc, aes(x = year,y = count, color = Species)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~SASAP.Region, scale = "free_y", ncol =2) +
+  my_theme
+```
+
+If we want to save the plots
+
+```{r, fig.width = 7, fig.height = 8}
+p = ggplot(annual_esc, aes(x = year,y = count, color = Species)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~SASAP.Region, scale = "free_y", ncol =2) +
+  my_theme
+
+p
+
+ggsave("figures/regional_escape.png", plot = p,
+       width = 10, height = 8, units = "in")
 ```
 
 # Generate an interactive map
