@@ -125,3 +125,30 @@ ggsave("figures/regional_escape.png", plot = p,
 
 # Generate an interactive map
 
+Map the sampling locations for escapement
+
+* find distinct lat/lon/location combinations
+
+```{r}
+locations = esc %>% 
+  distinct(Location, Latitude, Longitude) %>% 
+  drop_na()
+```
+
+```{r}
+datatable(locations)
+```
+
+```{r}
+leaflet(locations) %>% 
+  addTiles() %>% 
+  addMarkers(lng = ~Longitude, lat = ~Latitude, popup = ~Location)
+```
+
+# Add Table of content
+
+One RMarkdown for each chapter.
+Then use the package **bookdown**.
+
+The website is developed with package **blogdown**.
+
