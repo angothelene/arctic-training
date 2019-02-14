@@ -191,7 +191,24 @@ $(document).ready(function () {
 </div>
 
 
-
+<p>Alaska Department of Fish and Game, Division of Commercial Fisheries. 2017. Daily salmon escapement counts from the OceanAK database, Alaska, 1921-2017. Knowledge Network for Biocomplexity. Data <a href="https://knb.ecoinformatics.org/view/doi:10.5063/F1S46Q6M">here</a></p>
+<div id="packages" class="section level1">
+<h1>Packages</h1>
+<pre class="r"><code>library(leaflet)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(tidyr)
+library(ggplot2)
+library(DT)</code></pre>
+<pre class="r"><code>esc = read.csv(url(&quot;https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3Af119a05b-bbe7-4aea-93c6-85434dcb1c5e&quot;, method = &quot;libcurl&quot;), stringsAsFactors = FALSE)</code></pre>
+</div>
 
 
 

@@ -1,10 +1,86 @@
 ---
-title: "Untitled"
-author: "Helene Angot"
-date: "2/14/2019"
+title: "Data visualization"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+Alaska Department of Fish and Game, Division of Commercial Fisheries. 2017. Daily salmon escapement counts from the OceanAK database, Alaska, 1921-2017. Knowledge Network for Biocomplexity. Data [here](https://knb.ecoinformatics.org/view/doi:10.5063/F1S46Q6M).
+
+# Packages
+
+```{r message=FALSE, warning=FALSE}
+library(leaflet)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(DT)
+```
+
+# Reformat the data for plotting
+
+```{r}
+esc = read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3Af119a05b-bbe7-4aea-93c6-85434dcb1c5e", method = "libcurl"), stringsAsFactors = FALSE)
+```
+
+* calculate annual escapment by species and region
+
+First we need to create a "Year" variable.
+
+```{r}
+dates_split = esc %>% 
+  separate(sampleDate, into = c("year","month","day"), sep = "-", remove = F)
+head(dates_split)
+
+# coerce year to numeric type
+dates_split = dates_split %>% 
+  mutate(year = as.numeric(year))
+head(dates_split)
+```
+
+Then we use functions "group_by", "summarize", and "sum" to calculate the annual escapment by species and region.
+
+```{r}
+annual_esc = dates_split %>% 
+  group_by(year, Species, SASAP.Region) %>% 
+  summarize(count = sum(DailyCount))
+
+head(annual_esc)
+```
+
+* filter for just pacific salmon (Sockeye, Chinook, Coho, Pink, Chum)
+
+To do that we use function "filter".
+
+```{r}
+annual_esc = annual_esc %>% 
+  filter(Species %in% c("Chinook", "Sockeye", "Coho", "Pink", "Chum")) 
+head(annual_esc)
+```
+
+# Generate some static plots
+
+```{r}
+ggplot(annual_esc, mapping = aes(x = Species, y = count, fill = SASAP.Region)) +
+  geom_col()
+```
+
+```{r}
+my_theme = theme_test() +
+  theme(legend.position = "bottom", legend.title = element_blank())
+```
+
+```{r}
+ggplot(filter(annual_esc, SASAP.Region == "Kodiak"), aes(x = year, y = count, color = Species)) +
+  geom_line() +
+  geom_point() +
+  ylab("Escapement (num of fish)") +
+  xlab("Year") +
+  ggtitle("Kodiak Salmon Escapement") +
+  my_theme
+```
+
+# Generate an interactive map
+
