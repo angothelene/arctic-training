@@ -44,3 +44,6 @@ rsconnect/
 
 # figures/
 figures/*
+
+# shapefiles/
+shapefiles/*
