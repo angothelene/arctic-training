@@ -22,6 +22,9 @@ Mike Byerly. Alaska commercial salmon catches by management region (1886- 1997).
 **group_by**  
 **summarize**   
 **arrange**   
+**separate**  
+**unite**  
+**distinct**  
 
 ## Abstract
 

@@ -67,3 +67,10 @@ fahr_to_celsius <- function(fahr) {
     return(celsius)
 }
 ```
+
+# Use our package
+
+```{r}
+library(mytools)
+environment_info("Works in Rmd")
+```

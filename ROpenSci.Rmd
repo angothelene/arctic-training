@@ -1,0 +1,63 @@
+---
+title: "ROpenSci"
+author: "Helene Angot"
+date: "2/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+
+```{r message=FALSE}
+library(rnoaa)
+library(ncdf4)
+library(ggplot2)
+library(mapr)
+library(spocc)
+```
+
+# Accesssing buoy data using "rnoaa"
+
+Buoy ID [here](https://www.ndbc.noaa.gov).
+
+```{r}
+bd = buoy(dataset = "cwind",
+          buoyid = 46080,
+          year = 2018,
+          datatype = "c")
+```
+
+We can an object of class "buoy"...WTF?!
+
+```{r}
+wind_speed = data.frame(time = as.POSIXct(bd$data$time),
+                        speed = bd$data$wind_spd)
+```
+
+```{r}
+ggplot(wind_speed, aes(x = time, y = speed)) +
+         geom_point() +
+         xlab("") +
+         ylab("Wind speed (m/s)") +
+         ggtitle("2018 NOAA buoy observations near Kodiak, AK") +
+        theme_bw()
+```
+
+# Species occurrence maps using "mapr"
+
+more info [here](https://github.com/ropensci/mapr).
+
+```{r}
+spp = c("Ursus arctos", "Ursus maritimus")
+dat = occ(query = spp, 
+          from = "gbif", 
+          limit = 500, 
+          has_coords = TRUE)
+```
+
+```{r}
+map_leaflet(dat, size = 1, color = c("brown", "gray"), alpha = 1)
+```
