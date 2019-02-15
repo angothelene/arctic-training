@@ -30,7 +30,7 @@ bd = buoy(dataset = "cwind",
           datatype = "c")
 ```
 
-We can an object of class "buoy"...WTF?!
+We get an object of class "buoy"...WTF?!
 
 ```{r}
 wind_speed = data.frame(time = as.POSIXct(bd$data$time),
